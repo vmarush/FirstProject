@@ -8,3 +8,4 @@ class Book(models.Model):
     def __str__(self):
         # строковое представление объекта
         return f"Книга: {self.id} Название: {self.title} Автор: {self.autor}"
+        print("изменили")
