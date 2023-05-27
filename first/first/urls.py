@@ -17,18 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
 from django.contrib import admin
 from django.urls import path
 from .views import *
 from books.views import books
-
+from films.views import films
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', first),
     path('second/', second),
     path('third/', third),
-    path('get_books/', books)
+    path('get_books/', books),
+    path('films/', films)
 
 ]
