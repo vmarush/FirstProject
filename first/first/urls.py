@@ -28,7 +28,7 @@ urlpatterns = [
     path('index/', first),
     path('second/', second),
     path('third/', third),
-    path('get_books/', books),
+    path('get_books/', books, name ="books"),
     path('films/', films)
 
 ]
