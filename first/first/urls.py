@@ -22,13 +22,15 @@ from django.urls import path
 from .views import *
 from books.views import books
 from films.views import films
+from posts.views import posts
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', first),
     path('second/', second),
     path('third/', third),
-    path('get_books/', books, name ="books"),
-    path('films/', films)
+    path('get_books/', books, name="books"),
+    path('films/', films),
+    path('posts/', posts, name="posts")
 
 ]

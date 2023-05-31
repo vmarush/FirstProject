@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>посты</h1>
+        {% for post in posts %}
+        <p>{{post.title}}</p>
+        <p>{{post.tags}}</p>
+        <p>{{post.category}}</p>
+        <p>{{post.description}}</p>
+        <p>{{post.date_create}}</p>
+    {% endfor %}
+
+    <h2>теги</h2>
+        {% for tag in posttag %}
+        <p>{{tag.title}}</p>
+
+    {% endfor %}
+    <h2>категории</h2>
+        {% for categ in category %}
+        <p>{{categ.title}}</p>
+
+    {% endfor %}
+
+</body>
+</html>
