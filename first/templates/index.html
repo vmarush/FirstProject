@@ -6,29 +6,18 @@
 </head>
 <body>
 
-    <h1>
-        Список книг
-        {{books}}
-    </h1>
+<h1>
+    Список книг
+</h1>
 
-    {% for book in books %}
-        <p>{{book}}</p>
-        <p>{{book.title}}</p>
-        <p>{{book.autor}}</p>
-    {% endfor %}
-
-    <h1>Жанры:</h1>
-    {% for genre in genres %}
-        <p>{{genre}}</p>
-        <p>{{genre.title}}</p>
-
-    {% endfor %}
-
-
-    <h1>Издание</h1>
-    {% for publisher in publishers %}
-        <p>{{publisher}}</p>
-    {% endfor %}
+{% for book in books %}
+<p>
+<a href ="{% url 'get_book' book.id %} ">{{book.title}}</a>
+</p>
+<p>автор: {{book.autor}}</p>
+<p>жанры: {{book.genre.title}}</p>
+<br>
+{% endfor %}
 
 
 
