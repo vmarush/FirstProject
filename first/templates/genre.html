@@ -6,13 +6,12 @@
 </head>
 <body>
 <h1>{{genre.title}}</h1>
-<h3>{{genre.books.all}}</h3>
-<p>теги: </p>
-{%for book in genre.all %}
-    <p>{{book.id}}</p>
-    <p>{{book.title}}</p>
-    <p>{{book.autor}}</p>
+{%for gen in genre.books.all %}
+    <b>{{gen.title}}</b>
+    <p>{{gen.autor}}</p>
     <br>
 {% endfor %}
+
+
 </body>
 </html>

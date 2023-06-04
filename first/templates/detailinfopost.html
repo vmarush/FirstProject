@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{post.title}}</title>
+</head>
+<body>
+<h1>Тут находятся полная информация о посте</h1>
+<h3> название поста: </h3>
+<p>{{post.title}}</p>
+
+<h3> теги: </h3>
+{%for tag in post.tags.all %}
+<p>{{tag.title}}</p>
+{% endfor %}
+<h3> категория: </h3>
+<p>{{post.category.get_sense_display}}</p>
+<h3> описание: </h3>
+<p>{{post.description}}</p>
+<br>
+<br>
+<p>{{post.date_create}}</p>
+
+
+</body>
+</html>

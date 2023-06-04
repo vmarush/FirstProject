@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>тег {{tagpost.title}}</title>
+</head>
+<body>
+<h1>Тег {{tagpost.title}} </h1>
+{%for tag in tagpost.posts.all %}
+<p>{{tag.title}}</p>
+{% endfor %}
+
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from .models import Post, PostTag, Category
+from django.http import HttpResponse
 
 
 def posts(request):
@@ -12,3 +13,18 @@ def posts(request):
         "posts": posts,
         "posttag": posttag,
         "category": category})
+def get_post(request,id):
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return HttpResponse(f"поста с таким  {id} нету")
+    return render(request, "templates/detailinfopost.html", context={"post": post})
+
+
+def get_tag_posts(request,title):
+    try:
+        posttags = PostTag.objects.get(title=title)
+    except PostTag.DoesNotExist:
+        return HttpResponse(f"Тега  {title} нету")
+    return render(request, "templates/tegikpostam.html", context={"tagpost": posttags})
+
