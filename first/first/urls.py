@@ -31,9 +31,10 @@ urlpatterns = [
     path('third/', third),
     path('get_books/', books, name="books"),
     path('films/', films),
+
     path('posts/', posts, name="posts"),
     path('posts/<int:id>/', get_post, name="get_post"),
-    path('posts/<str:title>/', get_tag_posts, name="get_tag_post"),
+    path('posts/tag/<str:title>/', get_tag_posts, name="get_tag_post"),
 
 
     path('get_books/<int:id>/', get_book, name="get_book"),

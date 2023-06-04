@@ -17,8 +17,9 @@
 
     <h2>теги</h2>
         {% for tag in posttag %}
-        <p>{{tag.title}}</p>
+        <a href ="{% url 'get_tag_post' tag.title %} ">{{tag.title}}</a>
     {% endfor %}
+
 
 
 
