@@ -10,12 +10,12 @@ class Tag(models.Model):
 
 # вторичная запись
 class Book(models.Model):
-    title = models.CharField(max_length=50, blank=True)
-    autor = models.CharField(max_length=50, blank=True)
-    year = models.IntegerField(blank=True)
-    raiting = models.IntegerField(default=0)
+    title = models.CharField(max_length=50)
+    autor = models.CharField(max_length=50)
+    year = models.IntegerField()
+    raiting = models.IntegerField(default=0, null=True, blank=True)
 
-    publisher = models.OneToOneField("Publisher", on_delete=models.DO_NOTHING, default=None)
+    publisher = models.OneToOneField("Publisher", on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
 
     genre = models.ForeignKey("Genre", on_delete=models.DO_NOTHING, null=True, blank=True, related_name='books')
     tags = models.ManyToManyField("Tag", related_name="books")
