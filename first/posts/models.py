@@ -13,7 +13,7 @@ class Post(models.Model):
     tags = models.ManyToManyField('PostTag', related_name='posts')
     category = models.OneToOneField("Category", on_delete=models.CASCADE, related_name="posts")
     description = models.TextField(blank=True)
-    date_create = models.DateTimeField()
+    date_create = models.DateTimeField(blank=True)
 
     def __str__(self):
         return f"Пост: {self.id} Название: {self.title}"
