@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Book, Genre, Publisher, Tag
 from django.http import HttpResponse
 from .forms import BookForm
@@ -43,19 +43,36 @@ def get_tag_books(request, title):
 
 
 def add_book(request):
-    form = BookForm()
-    return render(request, "templates/add_book.html", context={'form':form})
+    if request.method == "GET":
+        form = BookForm()
+        return render(request, "add_book.html", context={"form": form})
+    elif request.method == "POST":
+        publisher_id = request.POST['publisher']
+        genre_id = request.POST['genre']
+
+        if publisher_id != '' and genre_id != '':
+            publisher = Publisher.objects.get(id=publisher_id)
+            genre=Genre.objects.get(id=genre_id)
+        else:
+            publisher = None
+            genre = None
+
+        book = Book.objects.create(title = request.POST['title'],
+                            autor = request.POST['autor'],
+                            year=request.POST['year'],
+                            raiting=request.POST['raiting'],
+                            publisher=publisher,
+                            genre=genre)
+        tags = request.POST.getlist('tags')
+        book.tags.set(tags)
+        book.save()
+
+        return redirect("books")
 
 
-def create_book(request):
-    print(request.POST)
-    genre = Genre.objects.get(id=request.Post['genre'])
-    print(genre)
-    Book.objects.create(title=request.Post['title'],
-                        autor=request.Post['autor'],
-                        tags=request.Post['tags'],
-                        raiting=request.Post['raiting'],
-                        # publisher=request.Post['publisher'],
-                        genre=genre
-                        )
-    return HttpResponse("<h1>получилось!</h1>")
+
+def search_book(request):
+    search_query = request.GET['search']
+    books = Book.objects.filter(year__contains=search_query)
+
+    return render(request, 'search_book.html', context={"books": books})

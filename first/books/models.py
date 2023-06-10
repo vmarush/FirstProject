@@ -18,7 +18,7 @@ class Book(models.Model):
     publisher = models.OneToOneField("Publisher", on_delete=models.DO_NOTHING, default=None, null=True, blank=True)
 
     genre = models.ForeignKey("Genre", on_delete=models.DO_NOTHING, null=True, blank=True, related_name='books')
-    tags = models.ManyToManyField("Tag", related_name="books")
+    tags = models.ManyToManyField("Tag", related_name="books",blank=True)
 
     def __str__(self):
         # строковое представление объекта
@@ -45,7 +45,7 @@ class Publisher(models.Model):
         ("fr", "French")
     )
     title = models.CharField(max_length=50)
-    language = models.CharField(max_length=2, choices=LANGUAGES, default="ru")
+    language = models.CharField(max_length=2, choices=LANGUAGES)
 
     def __str__(self):
         # строковое представление объекта
