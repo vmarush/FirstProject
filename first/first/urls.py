@@ -22,7 +22,7 @@ from django.urls import path
 from .views import *
 from books.views import books, get_book, get_genre_books, get_tag_books, add_book,search_book
 from films.views import films
-from posts.views import posts, get_post, get_tag_posts, add_post
+from posts.views import posts, get_post, get_tag_posts, add_post,search_post
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,5 +43,6 @@ urlpatterns = [
     path('add_book/', add_book, name="add_book"),
     path('search_book/', search_book, name="search_book"),
 
-    path('add_post/', add_post, name="add_post")
+    path('add_post/', add_post, name="add_post"),
+    path('search_posts/', search_post, name="search_post"),
 ]

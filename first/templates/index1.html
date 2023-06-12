@@ -5,22 +5,32 @@
     <title>Посты</title>
 </head>
 <body>
+<form action="{% url 'search_post' %}" method="get">
+    {% csrf_token %}
+<input placeholder="введите название поста" type="text" name="search">
+
+    <input type="submit" value="OK">
+</form>
+
     <h1>Тут находятся посты</h1>
         {% for post in posts.all %}
         <br>
 
         <a href ="{% url 'get_post' post.id %} ">{{post.title}}</a>
-        <p>{{post.date_create}}</p>
+        <p>{{post.category.get_sense_display}}</p>
     {% endfor %}
 
 
 
-    <h2>теги</h2>
+    <h2>Список тегов</h2>
         {% for tag in posttag %}
         <a href ="{% url 'get_tag_post' tag.title %} ">{{tag.title}}</a>
+        <br>
     {% endfor %}
     <br>
     <br>
+
+    <h3>Можно добавить пост</h3>
 <a href="{% url 'add_post' %}"> добавить пост</a>
 
 

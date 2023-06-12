@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 
 from .models import Post, PostTag, Category
 from django.http import HttpResponse
@@ -32,7 +32,7 @@ def get_tag_posts(request, title):
         return HttpResponse(f"Тега  {title} нету")
     return render(request, "templates/tegikpostam.html", context={"tagpost": posttags})
 
-
+# перваю вьюха
 # def add_post(request):
 #     if request.method == 'POST':
 #         form = PostForm(request.POST)
@@ -51,19 +51,30 @@ def add_post(request):
         return render(request, "add_post.html", context={"form": form})
     elif request.method == "POST":
         category_id = request.POST['category']
+        date_create_post = request.POST['date_create']
 
-        if category_id != '':
+        if category_id != '' and date_create_post != '':
             category = Category.objects.get(id=category_id)
+            date_create = request.Post['date_create']
+
         else:
             category = None
+            date_create = None
 
-        post = Post.objects.create(title = request.POST['title'],
-                            description=request.POST['description'],
-                            date_create=request.POST['date_create'],
-                            category=category,
-                            )
+        post = Post.objects.create(title=request.POST['title'],
+                                   description=request.POST['description'],
+                                   date_create=date_create,
+                                   category=category,
+                                   )
         tags = request.POST.getlist('tags')
         post.tags.set(tags)
         post.save()
 
         return redirect("posts")
+
+
+def search_post(request):
+    search_query = request.GET['search']
+    posts = Post.objects.filter(title__contains=search_query)
+
+    return render(request, 'search_post.html', context={"posts": posts})
