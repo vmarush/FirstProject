@@ -11,7 +11,8 @@ class PostTag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=50, blank=True)
     tags = models.ManyToManyField('PostTag', related_name='posts')
-    category = models.OneToOneField("Category", on_delete=models.CASCADE, related_name="posts")
+    category = models.OneToOneField("Category", on_delete=models.CASCADE, related_name="posts", default=None, null=True,
+                                    blank=True)
     description = models.TextField(blank=True)
     date_create = models.DateTimeField(blank=True)
 
