@@ -18,12 +18,17 @@
 {% else %}
 <p>Жанр: не указан</p>
 {% endif %}
+<p>время публикации на сайте: {{book.created_at}} </p>
 
 <p>теги: </p>
 {%for tag in book.tags.all %}
 <b><a href="{% url 'get_tag_books' tag.title  %}">{{tag.title}}</a></b>
 {% endfor %}
 
+    <br>
+
+    <h3>Можно удалить книгу</h3>
+<a href="{% url 'delete_book' book.id%}"> удаляем книгу</a>
 
 
 </body>

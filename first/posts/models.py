@@ -14,7 +14,7 @@ class Post(models.Model):
     category = models.OneToOneField("Category", on_delete=models.CASCADE, related_name="posts", default=None, null=True,
                                     blank=True)
     description = models.TextField(blank=True)
-    date_create = models.DateTimeField(blank=True, null=True)
+    date_create = models.DateTimeField(blank=True, null=True,auto_now_add = True)
 
     def __str__(self):
         return f"Пост: {self.id} Название: {self.title}"
