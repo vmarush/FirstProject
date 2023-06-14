@@ -50,12 +50,16 @@ def add_book(request):
         publisher_id = request.POST['publisher']
         genre_id = request.POST['genre']
 
-        if publisher_id != '' and genre_id != '':
+        if publisher_id != '':
             publisher = Publisher.objects.get(id=publisher_id)
-            genre=Genre.objects.get(id=genre_id)
         else:
             publisher = None
+        if genre_id != '':
+            genre = Genre.objects.get(id=genre_id)
+        else:
             genre = None
+
+
 
         book = Book.objects.create(title = request.POST['title'],
                             autor = request.POST['autor'],
