@@ -32,9 +32,6 @@ urlpatterns = [
     path('get_books/', books, name="books"),
     path('films/', films),
 
-    path('posts/', posts, name="posts"),
-    path('posts/<int:id>/', get_post, name="get_post"),
-    path('posts/tag/<str:title>/', get_tag_posts, name="get_tag_post"),
 
     path('get_books/<int:id>/', get_book, name="get_book"),
     path('get_genre/<str:title>/', get_genre_books, name="get_genre"),
@@ -44,6 +41,10 @@ urlpatterns = [
     path('search_book/', search_book, name="search_book"),
     path('delete_book/<int:id>/', delete_book, name="delete_book"),
 
+
+    path('posts/', posts, name="posts"),
+    path('posts/<int:id>/', get_post, name="get_post"),
+    path('posts/tag/<str:title>/', get_tag_posts, name="get_tag_post"),
     path('add_post/', add_post, name="add_post"),
     path('search_posts/', search_post, name="search_post"),
 ]

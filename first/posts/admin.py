@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Post, PostTag, Category
+from .models import Post, PostTag, Category, CategoryPost
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "get_tags", "category", "description","date_create")
+    list_display = ("id", "title", "get_tags", "category", "description","date_create",'category_post')
 
     def get_tags(self, obj):
         tags = obj.tags.all()
@@ -14,3 +14,5 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(PostTag)
 admin.site.register(Post,PostAdmin)
 admin.site.register(Category)
+admin.site.register(CategoryPost)
+

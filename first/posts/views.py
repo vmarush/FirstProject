@@ -32,17 +32,7 @@ def get_tag_posts(request, title):
         return HttpResponse(f"Тега  {title} нету")
     return render(request, "templates/tegikpostam.html", context={"tagpost": posttags})
 
-# перваю вьюха
-# def add_post(request):
-#     if request.method == 'POST':
-#         form = PostForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponse("<h1>пост добавлен в бд!</h1>")
-#
-#     else:
-#         form = PostForm()
-#     return render(request, "add_post.html", context={'form': form})
+
 
 
 def add_post(request):
