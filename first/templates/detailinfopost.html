@@ -21,6 +21,9 @@
 <br>
 <p>{{post.date_create}}</p>
 
+    <h3>Можно удалить пост</h3>
+<a href="{% url 'delete_post' post.id%}"> удалить пост</a>
+
 
 </body>
 </html>

@@ -7,8 +7,7 @@
 <body>
 <form action="{% url 'search_post' %}" method="get">
     {% csrf_token %}
-<input placeholder="введите название поста" type="text" name="search">
-
+<input placeholder="введите название поста" type="text" name="post">
     <input type="submit" value="OK">
 </form>
 
@@ -17,7 +16,9 @@
         <br>
 
         <a href ="{% url 'get_post' post.id %} ">{{post.title}}</a>
-        <p>{{post.category.get_sense_display}}</p>
+        <p>Категория :{{post.category.get_sense_display}}</p>
+        <p> категория поста :{{post.category_post.title}}</p>
+
     {% endfor %}
 
 
@@ -32,6 +33,15 @@
 
     <h3>Можно добавить пост</h3>
 <a href="{% url 'add_post' %}"> добавить пост</a>
+
+<br>
+
+    <form action="{% url 'search_category_post' %}" method="get">
+    {% csrf_token %}
+<input placeholder="введите категорию поста"  type="text" name="title">
+
+    <input type="submit" value="OK">
+</form>
 
 
 </body>

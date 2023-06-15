@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>категоиря поста</title>
+</head>
+<body>
+<h1>все посты этой категории </h1>
+
+ {% for post in posts %}
+        <p>
+            Название: <a href="{% url 'get_post' post.id %}">
+                {{post.title}}
+            </a>
+        </p>
+                {%for tag in post.tags.all %}
+                    <p> Тэги:{{tag.title}}</p>
+                    {% endfor %}
+            <p> Описание :{{post.description}}</p>
+            <p> Категория :{{post.category.get_sense_display}}</p>
+            <p> Дата создания :{{post.date_create}}</p>
+            <br>
+            <br>
+
+    {% endfor %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from .models import Post, PostTag, Category
+from .models import Post, PostTag, Category, CategoryPost
 from django.http import HttpResponse
 
 from .forms import PostForm
@@ -33,27 +33,26 @@ def get_tag_posts(request, title):
     return render(request, "templates/tegikpostam.html", context={"tagpost": posttags})
 
 
-
-
 def add_post(request):
     if request.method == "GET":
         form = PostForm()
         return render(request, "add_post.html", context={"form": form})
     elif request.method == "POST":
         category_id = request.POST['category']
-        date_create_post = request.POST['date_create']
+        category_post_id = request.POST['category_post']
 
-        if category_id != '' and date_create_post != '':
+        if category_id != '':
             category = Category.objects.get(id=category_id)
-            date_create = request.Post['date_create']
-
         else:
             category = None
-            date_create = None
+        if category_post_id != '':
+            category_post = CategoryPost.objects.get(id=category_post_id)
+        else:
+            category_post = None
 
         post = Post.objects.create(title=request.POST['title'],
                                    description=request.POST['description'],
-                                   date_create=date_create,
+                                   category_post=category_post,
                                    category=category,
                                    )
         tags = request.POST.getlist('tags')
@@ -64,7 +63,31 @@ def add_post(request):
 
 
 def search_post(request):
-    search_query = request.GET['search']
-    posts = Post.objects.filter(title__contains=search_query)
+    post = request.GET['post']
+    posts = Post.objects.filter(title__contains=post)
 
     return render(request, 'search_post.html', context={"posts": posts})
+
+
+def search_category_post(request):
+    title = request.GET['title']
+
+    posts = Post.objects.all()
+
+    if title != '':
+        posts = posts.filter(category_post__title__contains=title)
+
+
+
+    return render(request, 'search_category_post.html', context={"posts": posts})
+
+
+def delete_post(request, id):
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return HttpResponse(f"<h1>поста с таким айди {id} не существует</h1>")
+
+    post.delete()
+
+    return redirect('posts')
