@@ -50,6 +50,8 @@ def add_book(request):
         publisher_id = request.POST['publisher']
         genre_id = request.POST['genre']
 
+        image = None
+
         if publisher_id != '':
             publisher = Publisher.objects.get(id=publisher_id)
         else:
@@ -59,6 +61,9 @@ def add_book(request):
         else:
             genre = None
 
+        if request.FILES['image'] != '':
+            image = request.FILES['image']
+
 
 
         book = Book.objects.create(title = request.POST['title'],
@@ -66,7 +71,8 @@ def add_book(request):
                             year=request.POST['year'],
                             raiting=request.POST['raiting'],
                             publisher=publisher,
-                            genre=genre)
+                            genre=genre,
+                            image=image)
         tags = request.POST.getlist('tags')
         book.tags.set(tags)
         book.save()

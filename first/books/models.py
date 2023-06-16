@@ -20,6 +20,7 @@ class Book(models.Model):
     genre = models.ForeignKey("Genre", on_delete=models.DO_NOTHING, null=True, blank=True, related_name='books')
     tags = models.ManyToManyField("Tag", related_name="books",blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
+    image = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         # строковое представление объекта

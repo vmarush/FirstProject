@@ -23,6 +23,9 @@ from .views import *
 from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book
 from films.views import films
 from posts.views import posts, get_post, get_tag_posts, add_post, search_post, search_category_post, delete_post
+from users.views import register_user
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,4 +50,10 @@ urlpatterns = [
     path('search_posts/', search_post, name="search_post"),
     path('search_category_post/', search_category_post, name="search_category_post"),
     path('delete_post/<int:id>/', delete_post, name="delete_post"),
+
+
+    path('registration/', register_user, name='register')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

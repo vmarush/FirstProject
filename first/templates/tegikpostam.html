@@ -5,10 +5,10 @@
     <title>тег {{tagpost.title}}</title>
 </head>
 <body>
-<h1>Тег {{tagpost.title}} </h1>
+<h1>Тег: {{tagpost.title}} </h1>
 {% if tagpost.posts.all %}
     {%for tag in tagpost.posts.all %}
-    <p>{{tag.title}}</p>
+    <p><a href ="{% url 'get_post' tag.id %} ">{{tag.title}}</a></p>
     {% endfor %}
 {% else %}
 <p>постов с таким тегом нет</p>
