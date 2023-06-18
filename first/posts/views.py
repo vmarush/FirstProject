@@ -40,7 +40,7 @@ def add_post(request):
     elif request.method == "POST":
         category_id = request.POST['category']
         category_post_id = request.POST['category_post']
-
+        image = None
         if category_id != '':
             category = Category.objects.get(id=category_id)
         else:
@@ -50,10 +50,14 @@ def add_post(request):
         else:
             category_post = None
 
+        if request.FILES['image'] != '':
+            image = request.FILES['image']
+
         post = Post.objects.create(title=request.POST['title'],
                                    description=request.POST['description'],
                                    category_post=category_post,
                                    category=category,
+                                   image=image
                                    )
         tags = request.POST.getlist('tags')
         post.tags.set(tags)

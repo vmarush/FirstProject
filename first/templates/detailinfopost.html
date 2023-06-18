@@ -6,6 +6,12 @@
 </head>
 <body>
 <h1>Тут находятся полная информация о посте</h1>
+
+{% if post.image %}
+<img style="width:120px; height:120px" src="{{post.image.url}}">
+{% endif %}
+
+
 <h3> название поста: </h3>
 <p>{{post.title}}</p>
 
