@@ -50,8 +50,6 @@ def add_book(request):
         publisher_id = request.POST['publisher']
         genre_id = request.POST['genre']
 
-        image = None
-
         if publisher_id != '':
             publisher = Publisher.objects.get(id=publisher_id)
         else:
@@ -61,24 +59,20 @@ def add_book(request):
         else:
             genre = None
 
-        if request.FILES['image'] != '':
-            image = request.FILES['image']
+        image = request.FILES.get('image', '123.jpg')
 
-
-
-        book = Book.objects.create(title = request.POST['title'],
-                            autor = request.POST['autor'],
-                            year=request.POST['year'],
-                            raiting=request.POST['raiting'],
-                            publisher=publisher,
-                            genre=genre,
-                            image=image)
+        book = Book.objects.create(title=request.POST['title'],
+                                   autor=request.POST['autor'],
+                                   year=request.POST['year'],
+                                   raiting=request.POST['raiting'],
+                                   publisher=publisher,
+                                   genre=genre,
+                                   image=image)
         tags = request.POST.getlist('tags')
         book.tags.set(tags)
         book.save()
 
         return redirect("books")
-
 
 
 def search_book(request):
@@ -105,3 +99,44 @@ def delete_book(request, id):
     book.delete()
 
     return redirect('books')
+
+
+def update_book(request, id):
+
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return HttpResponse(f"<h1>книги с таким айди {id} не существует</h1>")
+
+    if request.method == "GET":
+        form = BookForm(instance=book)
+        return render(request, 'update_book.html', context={"form": form,
+                                                            'book': book})
+    else:
+
+        publisher_id = request.POST['publisher']
+        genre_id = request.POST['genre']
+        image = request.FILES.get('image', "123.jpg")
+
+        if publisher_id != '':
+            publisher = Publisher.objects.get(id=publisher_id)
+        else:
+            publisher = None
+        if genre_id != '':
+            genre = Genre.objects.get(id=genre_id)
+        else:
+            genre = None
+
+        book.title = request.POST['title']
+        book.autor = request.POST['autor']
+        book.year = request.POST['year']
+        book.publisher = publisher
+        book.raiting = request.POST['raiting']
+        book.genre = genre
+        book.image = image
+        tags = request.POST.getlist('tags')
+        book.tags.set(tags)
+        book.save()
+        return redirect('get_book',id=book.id)
+
+

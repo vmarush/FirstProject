@@ -35,7 +35,8 @@
 
     <h3>Можно удалить книгу</h3>
 <a href="{% url 'delete_book' book.id%}"> удаляем книгу</a>
-
+    <h3>Можно редактирывать</h3>
+<a href="{% url 'update_book_by_id' book.id%}"> редактирывать книгу</a>
 
 </body>
 </html>

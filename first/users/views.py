@@ -1,7 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import UserForm
-def register_user(request):
-    form = UserForm()
+from django.contrib.auth.models import User
 
-    return render(request,"register.html",context={"form":form})
+
+def register_user(request):
+    if request.method == "GET":
+        form = UserForm()
+
+        return render(request, "register.html", context={"form": form})
+    else:
+        user = User.objects.create_user(username=request.POST['username'],
+                                        email=request.POST['email'])
+
+        user.set_password(request.POST['password'])
+        user.save()
+        return redirect('books')
