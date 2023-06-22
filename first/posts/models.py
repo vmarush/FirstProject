@@ -17,7 +17,7 @@ class Post(models.Model):
     date_create = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     category_post = models.ForeignKey("CategoryPost", on_delete=models.DO_NOTHING, null=True, blank=True,
                                       related_name='posts', default=None)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(default='123.jpg')
 
     def __str__(self):
         return f"Пост: {self.id} Название: {self.title}"

@@ -40,7 +40,6 @@ def add_post(request):
     elif request.method == "POST":
         category_id = request.POST['category']
         category_post_id = request.POST['category_post']
-        image = None
         if category_id != '':
             category = Category.objects.get(id=category_id)
         else:
@@ -50,8 +49,7 @@ def add_post(request):
         else:
             category_post = None
 
-        if request.FILES['image'] != '':
-            image = request.FILES['image']
+        image = request.FILES.get('image', '123.jpg')
 
         post = Post.objects.create(title=request.POST['title'],
                                    description=request.POST['description'],
@@ -81,8 +79,6 @@ def search_category_post(request):
     if title != '':
         posts = posts.filter(category_post__title__contains=title)
 
-
-
     return render(request, 'search_category_post.html', context={"posts": posts})
 
 
@@ -95,3 +91,39 @@ def delete_post(request, id):
     post.delete()
 
     return redirect('posts')
+
+
+def update_post(request, id):
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return HttpResponse(f"<h1>поста с таким айди {id} не существует</h1>")
+    if request.method == "GET":
+        form = PostForm(instance=post)
+        return render(request, "update_post.html", context={"post": post,
+                                                            'form': form})
+    else:
+        category_id = request.POST['category']
+        category_post_id = request.POST['category_post']
+        if category_id != '':
+            category = Category.objects.get(id=category_id)
+        else:
+            category = None
+        if category_post_id != '':
+            category_post = CategoryPost.objects.get(id=category_post_id)
+        else:
+            category_post = None
+
+        image = request.FILES.get('image', '123.jpg')
+
+        post.title = request.POST['title']
+        post.description = request.POST['description']
+        post.category_post = category_post
+        post.category = category
+        post.image = image
+
+        tags = request.POST.getlist('tags')
+        post.tags.set(tags)
+        post.save()
+
+    return redirect("get_post", id=post.id)
