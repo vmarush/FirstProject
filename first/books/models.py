@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Tag(models.Model):
     title = models.CharField(max_length=50)
@@ -21,6 +21,8 @@ class Book(models.Model):
     tags = models.ManyToManyField("Tag", related_name="books",blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     image = models.ImageField(default='123.jpg')
+
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True,related_name='books')
 
     def __str__(self):
         # строковое представление объекта

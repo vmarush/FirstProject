@@ -31,12 +31,16 @@
 <b><a href="{% url 'get_tag_books' tag.title  %}">{{tag.title}}</a></b>
 {% endfor %}
 
+<p>Книга добавлена :  {{book.user.username}}</p>
     <br>
+<hr>
 
+{% if equest.user.username == request.user.username %}
     <h3>Можно удалить книгу</h3>
 <a href="{% url 'delete_book' book.id%}"> удаляем книгу</a>
     <h3>Можно редактирывать</h3>
 <a href="{% url 'update_book_by_id' book.id%}"> редактирывать книгу</a>
+{% endif %}
 
 </body>
 </html>

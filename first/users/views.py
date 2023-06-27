@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .forms import UserForm, LoginUserForm
 from django.contrib.auth.models import User
 import django
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,login,logout
 
 
 def register_user(request):
@@ -38,11 +38,13 @@ def login_user(request):
         password = request.POST['password']
         user = authenticate(username=username,password=password)
         if user is not None:
-            return HttpResponse("<h1>логин и пароль верен, вы можете войти</h1>")
+            login(request,user=user)
         else:
-            return HttpResponse("<h1>Проверьте правильность пороля</h1>")
+            return HttpResponse("<h1>неверные данные</h1>")
 
-        form = LoginUserForm()
+        return redirect('books')
 
-        return render(request, "login_user.html", context={"form": form})
 
+def logout_user(request):
+    logout(request)
+    return redirect('books')
