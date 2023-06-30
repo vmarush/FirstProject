@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Book, Genre, Publisher, Tag
+from .models import Book, Genre, Publisher, Tag, Comment
 from django.http import HttpResponse
 from .forms import BookForm
 
@@ -79,8 +79,6 @@ def add_book(request):
         return HttpResponse(f"<h1>у вас нет прав</h1>")
 
 
-
-
 def search_book(request):
     title = request.GET['title']
     genre = request.GET['genre']
@@ -151,3 +149,13 @@ def update_book(request, id):
             book.tags.set(tags)
             book.save()
             return redirect('get_book', id=book.id)
+
+
+def add_comment(request, id):
+    raiting = 5
+    book = Book.objects.get(id=id)
+    Comment.objects.create(content=request.POST['comment'],
+                           raiting=raiting,
+                           user=request.user,
+                           book=book)
+    return redirect('get_book', id=id)

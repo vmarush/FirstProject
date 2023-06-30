@@ -20,7 +20,7 @@ from django.urls import path
 from django.contrib import admin
 from django.urls import path
 from .views import *
-from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book,update_book
+from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book,update_book,add_comment
 from films.views import films
 from posts.views import posts, get_post, get_tag_posts, add_post, search_post, search_category_post, delete_post,update_post
 from users.views import register_user, login_user,logout_user
@@ -41,6 +41,7 @@ urlpatterns = [
 
     path('add_book/', add_book, name="add_book"),
     path('update_book/<int:id>/', update_book, name="update_book_by_id"),
+    path('add_comment/<int:id>/', add_comment, name="add_comment"),
 
     path('search_book/', search_book, name="search_book"),
     path('delete_book/<int:id>/', delete_book, name="delete_book"),

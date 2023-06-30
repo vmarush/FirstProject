@@ -54,3 +54,19 @@ class Publisher(models.Model):
     def __str__(self):
         # строковое представление объекта
         return f"Издание {self.title} => {self.language} "
+
+class Comment(models.Model):
+    content = models.CharField(max_length=50)
+    raiting = models.IntegerField()
+    user = models.ForeignKey(User,on_delete=models.CASCADE,
+                             related_name='comments')
+    book = models.ForeignKey(Book,on_delete=models.CASCADE,
+                             related_name='comments')
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+
+        return f"окмент {self.content} => {self.user.username} "
+    class Meta:
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
