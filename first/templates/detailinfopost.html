@@ -27,10 +27,13 @@
 <br>
 <p>{{post.date_create}}</p>
 
-    <h3>Можно удалить пост</h3>
-<a href="{% url 'delete_post' post.id%}"> удалить пост</a>
-    <h3>Можно редактировать пост</h3>
-<a href="{% url 'update_post' post.id%}"> редактирывать пост</a>
+{% if request.user.username == request.user.username %}
+        <h3>Можно удалить пост</h3>
+    <a href="{% url 'delete_post' post.id%}"> удалить пост</a>
+        <h3>Можно редактировать пост</h3>
+    <a href="{% url 'update_post' post.id%}"> редактирывать пост</a>
+{% endif %}
 
+<p>Пост добавил :  {{post.user.username}}</p>
 </body>
 </html>

@@ -4,7 +4,7 @@ from .models import Post, PostTag, Category, CategoryPost
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "get_tags", "category", "description","date_create",'category_post')
+    list_display = ("id", "title", "get_tags", "category", "description","date_create",'category_post','user')
 
     def get_tags(self, obj):
         tags = obj.tags.all()

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class PostTag(models.Model):
     title = models.CharField(max_length=50)
@@ -18,6 +18,7 @@ class Post(models.Model):
     category_post = models.ForeignKey("CategoryPost", on_delete=models.DO_NOTHING, null=True, blank=True,
                                       related_name='posts', default=None)
     image = models.ImageField(default='123.jpg')
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='posts')
 
     def __str__(self):
         return f"Пост: {self.id} Название: {self.title}"
