@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from .forms import UserForm, LoginUserForm
 from django.contrib.auth.models import User
 import django
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail, BadHeaderError
+from django.conf import settings
 
 
 def register_user(request):
@@ -25,6 +27,9 @@ def register_user(request):
 
             user.set_password(request.POST['password'])
             user.save()
+
+            send_mail("Успешня регистрация", "вы успешно зарегестрирывались", settings.DEFAULT_FROM_EMAIL, settings.RECIPIENTS_EMAIL)
+
             return HttpResponse("<h1>вы успешно зарегистрировались</h1>")
 
 
@@ -36,9 +41,9 @@ def login_user(request):
     else:
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(username=username,password=password)
+        user = authenticate(username=username, password=password)
         if user is not None:
-            login(request,user=user)
+            login(request, user=user)
         else:
             return HttpResponse("<h1>неверные данные</h1>")
 
@@ -46,8 +51,12 @@ def login_user(request):
 
 
 def logout_user(request):
-    logout(request)
-    if request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/get_books/':
-        return redirect('books')
-    elif request.environ['HTTP_REFERER'] =='http://127.0.0.1:8000/posts/':
-        return redirect('posts')
+
+    if request.user.is_authenticated:
+        logout(request)
+        if request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/get_books/':
+            return redirect('books')
+        elif request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/posts/':
+            return redirect('posts')
+    else:
+        return HttpResponse("<h1>404</h1>")

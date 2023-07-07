@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Book, Genre, Publisher, Tag, Comment
 from django.http import HttpResponse
 from .forms import BookForm
-
+import django
 
 def books(request):
     books = Book.objects.all()
@@ -151,11 +151,36 @@ def update_book(request, id):
             return redirect('get_book', id=book.id)
 
 
+# def add_comment(request, id):
+#     print(request.POST)
+#     try:
+#         raiting = 5
+#         book = Book.objects.get(id=id)
+#         Comment.objects.create(content=request.POST['comment'],
+#                                raiting=raiting,
+#                                user=request.user,
+#                                book=book)
+#         return redirect('get_book', id=id)
+#     except django.utils.datastructures.MultiValueDictKeyError:
+#         return HttpResponse(f"<h1>вы не добаляете комент </h1>")
+#     except Exception:
+#         return HttpResponse(f"<h1>введите коректный адресс </h1>")
+
+
 def add_comment(request, id):
-    raiting = 5
-    book = Book.objects.get(id=id)
-    Comment.objects.create(content=request.POST['comment'],
-                           raiting=raiting,
-                           user=request.user,
-                           book=book)
-    return redirect('get_book', id=id)
+    if request.user.is_authenticated:
+        raiting = 5
+        try:
+            book = Book.objects.get(id=id)
+        except Book.DoesNotExist:
+            return HttpResponse(f"<h1>нет такоой книги </h1>")
+        try:
+            Comment.objects.create(content=request.POST['comment'],
+                                   raiting=raiting,
+                                   user=request.user,
+                                   book=book)
+        except django.utils.datastructures.MultiValueDictKeyError:
+            return HttpResponse(f"<h1>404 </h1>")
+        return redirect('get_book', id=id)
+    else:
+        return HttpResponse(f"<h1>введите коректный адресс </h1>")

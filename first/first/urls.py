@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from .views import *
 from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book,update_book,add_comment
 from films.views import films
@@ -32,19 +32,10 @@ urlpatterns = [
     path('index/', first),
     path('second/', second),
     path('third/', third),
-    path('get_books/', books, name="books"),
+
     path('films/', films),
+    path('',include('books.urls')),
 
-    path('get_books/<int:id>/', get_book, name="get_book"),
-    path('get_genre/<str:title>/', get_genre_books, name="get_genre"),
-    path('get_tag/<str:title>/', get_tag_books, name="get_tag_books"),
-
-    path('add_book/', add_book, name="add_book"),
-    path('update_book/<int:id>/', update_book, name="update_book_by_id"),
-    path('add_comment/<int:id>/', add_comment, name="add_comment"),
-
-    path('search_book/', search_book, name="search_book"),
-    path('delete_book/<int:id>/', delete_book, name="delete_book"),
 
     path('posts/', posts, name="posts"),
     path('posts/<int:id>/', get_post, name="get_post"),
@@ -56,10 +47,8 @@ urlpatterns = [
     path('search_category_post/', search_category_post, name="search_category_post"),
     path('delete_post/<int:id>/', delete_post, name="delete_post"),
 
+    path('users/',include('users.urls')),
 
-    path('registration/', register_user, name='register'),
-    path('login/', login_user, name='login'),
-    path('logout/', logout_user, name='logout')
 ]
 
 if settings.DEBUG:

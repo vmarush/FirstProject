@@ -130,3 +130,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+RECIPIENTS_EMAIL = ['marushkevich1996@mail.ru']   # замените на свою почту
+DEFAULT_FROM_EMAIL = 'marushkevich1996@mail.ru'  # замените на свою почту
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = 'marushkevich1996@mail.ru'
+EMAIL_HOST_PASSWORD = 'ytvfzY2713unMzFgfFWG'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
