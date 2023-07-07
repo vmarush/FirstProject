@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{post.title}}</title>
-</head>
-<body>
+{% extends 'base_post.html'%}
+{% block title %} детальная {% endblock %}
+{% block content %}
 <h1>Тут находятся полная информация о посте</h1>
 
 {% if post.image %}
@@ -35,5 +31,4 @@
 {% endif %}
 
 <p>Пост добавил :  {{post.user.username}}</p>
-</body>
-</html>
+{% endblock %}

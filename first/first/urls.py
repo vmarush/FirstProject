@@ -20,10 +20,10 @@ from django.urls import path
 from django.contrib import admin
 from django.urls import path,include
 from .views import *
-from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book,update_book,add_comment
+# from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book,update_book,add_comment
 from films.views import films
-from posts.views import posts, get_post, get_tag_posts, add_post, search_post, search_category_post, delete_post,update_post
-from users.views import register_user, login_user,logout_user
+# from posts.views import posts, get_post, get_tag_posts, add_post, search_post, search_category_post, delete_post,update_post
+# from users.views import register_user, login_user,logout_user
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -35,17 +35,8 @@ urlpatterns = [
 
     path('films/', films),
     path('',include('books.urls')),
+    path('',include('posts.urls')),
 
-
-    path('posts/', posts, name="posts"),
-    path('posts/<int:id>/', get_post, name="get_post"),
-    path('update_post/<int:id>/', update_post, name="update_post"),
-
-    path('posts/tag/<str:title>/', get_tag_posts, name="get_tag_post"),
-    path('add_post/', add_post, name="add_post"),
-    path('search_posts/', search_post, name="search_post"),
-    path('search_category_post/', search_category_post, name="search_category_post"),
-    path('delete_post/<int:id>/', delete_post, name="delete_post"),
 
     path('users/',include('users.urls')),
 

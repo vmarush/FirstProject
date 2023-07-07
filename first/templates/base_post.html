@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Главная{% endblock %}</title>
+</head>
+
+
+<body>
+<form action="{% url 'search_post' %}" method="get">
+    {% csrf_token %}
+<input placeholder="введите название поста" type="text" name="post">
+    <input type="submit" value="OK">
+</form>
+
+
+{% block content %}
+
+{% endblock %}
+
+
+<form action="{% url 'search_category_post' %}" method="get">
+    {% csrf_token %}
+<input placeholder="введите категорию поста"  type="text" name="title">
+
+    <input type="submit" value="OK">
+</form>
+</body>
+</html>
