@@ -24,6 +24,9 @@ class Book(models.Model):
 
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, null=True, blank=True,related_name='books')
 
+    price = models.DecimalField(max_digits=6,decimal_places=2)
+    count = models.IntegerField(default=10)
+
     def __str__(self):
         # строковое представление объекта
         return f"Книга: {self.id} Название: {self.title} Автор: {self.autor}"

@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .forms import BookForm
 import django
 
+
 def books(request):
     books = Book.objects.all()
     genres = Genre.objects.all()
@@ -82,16 +83,25 @@ def add_book(request):
 def search_book(request):
     title = request.GET['title']
     genre = request.GET['genre']
+    price_lt = request.GET['price_lt']
 
     books = Book.objects.all()
+    result_string = "Результат поиска"
 
     if title != '':
+        result_string += f"по названию {title} "
         books = books.filter(title__contains=title)
 
     if genre != '':
+        result_string += f"по жанру {genre} "
         books = books.filter(genre__title__contains=genre)
 
-    return render(request, 'search_book.html', context={"books": books})
+    if price_lt != '':
+        result_string += f"по цене {price_lt} "
+        books = books.filter(price__lte=price_lt)
+
+    return render(request, 'search_book.html', context={"books": books,
+                                                        "result_string": result_string})
 
 
 def delete_book(request, id):
@@ -184,3 +194,18 @@ def add_comment(request, id):
         return redirect('get_book', id=id)
     else:
         return HttpResponse(f"<h1>введите коректный адресс </h1>")
+
+
+def buy_book(request, id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return HttpResponse(f"<h1>такой книги нет </h1>")
+
+    if book.count != 0:
+        book.count = book.count - 1
+        book.save()
+    else:
+        return HttpResponse(f"<h1> 404 </h1>")
+
+    return HttpResponse(f"<h1>buy book </h1>")

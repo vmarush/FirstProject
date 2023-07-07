@@ -34,6 +34,11 @@ def register_user(request):
 
 
 def login_user(request):
+    if request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/get_books/':
+        redirect_url = 'books'
+    else:
+        redirect_url = 'posts'
+
     if request.method == "GET":
         form = LoginUserForm()
 
@@ -47,7 +52,7 @@ def login_user(request):
         else:
             return HttpResponse("<h1>неверные данные</h1>")
 
-        return redirect('books')
+        return redirect(redirect_url)
 
 
 def logout_user(request):

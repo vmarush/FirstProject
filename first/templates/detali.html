@@ -29,7 +29,16 @@
 {% endfor %}
 
 <p>Книга добавлена :  {{book.user.username}}</p>
+<p>цена :  {{book.price}}</p>
+
+{% if book.count > 0 %}
+<a href="{% url 'buy_book' book.id%}"> купить книгу</a>
+    {% else %}
+    <h3>Книг на складе нет</h3>
+{% endif %}
     <br>
+
+
 <hr>
 
 {% if request.user.username == request.user.username %}
