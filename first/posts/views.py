@@ -136,3 +136,15 @@ def update_post(request, id):
             post.save()
 
         return redirect("get_post", id=post.id)
+
+def likes_post(request, id):
+    if request.user.is_authenticated:
+        try:
+            post = Post.objects.get(id=id)
+        except Post.DoesNotExist:
+            return HttpResponse(f"<h1>такого поста нету </h1>")
+
+        post.likes = post.likes + 1
+        post.save()
+    return redirect('get_post',id=post.id)
+

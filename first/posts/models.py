@@ -19,6 +19,7 @@ class Post(models.Model):
                                       related_name='posts', default=None)
     image = models.ImageField(default='123.jpg')
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='posts')
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Пост: {self.id} Название: {self.title}"
