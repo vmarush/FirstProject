@@ -137,14 +137,14 @@ def update_post(request, id):
 
         return redirect("get_post", id=post.id)
 
-def likes_post(request, id):
-    if request.user.is_authenticated:
-        try:
-            post = Post.objects.get(id=id)
-        except Post.DoesNotExist:
-            return HttpResponse(f"<h1>такого поста нету </h1>")
 
+def likes_post(request, id):
+    try:
+        post = Post.objects.get(id=id)
+
+    except Post.DoesNotExist:
+        return HttpResponse(f"<h1>такого поста нету </h1>")
+    if request.user.is_authenticated:
         post.likes = post.likes + 1
         post.save()
-    return redirect('get_post',id=post.id)
-
+        return redirect('get_post', id=post.id)

@@ -39,6 +39,12 @@
     <br>
 
 
+{% if request.user.is_authenticated and show_favorite_button %}
+<a href="{% url 'favorite_book' book.id %}"> Добавить в избранное </a>
+    {% else %}
+    <h3>добавлено в избранное</h3>
+{% endif %}
+
 <hr>
 
 {% if request.user.username == request.user.username %}

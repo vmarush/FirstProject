@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+избранная
+{% endblock %}
+
+{% block content %}
+<a href ="{% url 'books' %} ">на главную</a>
+{% if favorites %}
+    {% for favorite in favorites%}
+        <div style="border: 1px solid black; width: 500px; margin: 10px; padding: 10px;">
+        <h3><a href ="{% url 'get_book' favorite.book.id %} ">{{favorite.book.title}}</a></h3>
+        <p>Автор :{{favorite.book.autor}}</p>
+        <p>Цена : {{favorite.book.price}}</p>
+            <p>Рейтинг : {{favorite.book.raiting}}</p>
+             <p>Год : {{favorite.book.year}}</p>
+            <hr>
+            <a href="{% url 'delete_from_favorites' favorite.book.id %}">убрать из избранного</a>
+        </div>
+    {% endfor %}
+    {% else %}
+    <h2> вы еще не добавили ни одной книги
+    </h2>
+    {% endif %}
+{% endblock %}

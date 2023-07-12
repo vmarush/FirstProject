@@ -10,7 +10,8 @@
     <h1>
         Вы успешно вошли как {{request.user.username}}
     </h1>
-    <a href="{% url 'logout' %}"> выход</a>
+    <h3><a href="{% url 'logout' %}"> выход</a></h3>
+    <h3><a href ="{% url 'favorites' %} ">избранное</a></h3>
     {% else %}
 
 <a href="{% url 'register' %}"> регистрация</a>

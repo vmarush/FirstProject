@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Book, Genre, Publisher, Tag, Comment
+from .models import Book, Genre, Publisher, Tag, Comment,Favorite
 from django.http import HttpResponse
 from .forms import BookForm
 import django
@@ -21,8 +21,12 @@ def get_book(request, id):
     except Book.DoesNotExist:
         return HttpResponse(f"<h1>книги с таким айди {id} не существует</h1>")
 
-    # return HttpResponse(f"<h1>Детальная инфа о книге {book.title}</h1>")
-    return render(request, "templates/detali.html", context={"book": book})
+    show_favorite_button = True
+
+    if Favorite.objects.filter(book=book,user=request.user):
+        show_favorite_button = False
+    return render(request, "templates/detali.html", context={"book": book,
+                                                             'show_favorite_button':show_favorite_button})
 
 
 def get_genre_books(request, title):
@@ -209,3 +213,36 @@ def buy_book(request, id):
         return HttpResponse(f"<h1> 404 </h1>")
 
     return HttpResponse(f"<h1>buy book </h1>")
+
+def favorite_book(request,id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return HttpResponse('<h1>404</h1>')
+    if not request.user.is_authenticated:
+        return HttpResponse('<h1>404</h1>')
+
+    Favorite.objects.create(book=book,
+                            user = request.user)
+    return redirect('get_book', id=book.id)
+
+def favorites(request):
+    if request.user.is_authenticated:
+        favorites = Favorite.objects.filter(user=request.user)
+        return render(request, 'favorites.html', context={"favorites": favorites
+                                                            })
+    else:
+        return HttpResponse('<h1>404</h1>')
+
+def delete_from_favorites(request,id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return HttpResponse('<h1>404</h1>')
+    if request.user.is_authenticated:
+        favorite = Favorite.objects.get(user=request.user, book=book)
+
+        favorite.delete()
+
+        return redirect('favorites')
+    return HttpResponse('<h1>404</h1>')
