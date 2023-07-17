@@ -189,7 +189,6 @@ def update_book(request, id):
             return redirect('get_book', id=book.id)
 
 
-
 def add_comment(request, id):
     if request.user.is_authenticated:
         raiting = 5

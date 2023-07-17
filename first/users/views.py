@@ -54,7 +54,6 @@ def login_user(request):
 
         return redirect(redirect_url)
 
-
 def logout_user(request):
 
     if request.user.is_authenticated:

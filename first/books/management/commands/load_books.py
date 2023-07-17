@@ -6,7 +6,6 @@ import random
 from books.models import Book, Publisher
 import django
 
-
 class Command(BaseCommand):
     help = 'Загрузка книг из другого источника'
 

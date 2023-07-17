@@ -14,6 +14,6 @@ urlpatterns = [
     path('search_category_post/', search_category_post, name="search_category_post"),
     path('delete_post/<int:id>/', delete_post, name="delete_post"),
     path('likes_post/<int:id>/', likes_post, name="likes_post"),
-    path("test_get_post/", PostListView.as_view(), name="test_get_post")
+    path("test_get_post/", PostListView.as_view(), name="test_get_post"),
 
 ]

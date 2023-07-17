@@ -37,7 +37,6 @@ urlpatterns = [
     path('',include('books.urls')),
     path('',include('posts.urls')),
 
-
     path('users/',include('users.urls')),
 
 ]
