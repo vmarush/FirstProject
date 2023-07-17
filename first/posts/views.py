@@ -102,7 +102,7 @@ def search_category_post(request):
     return render(request, 'search_category_post.html', context={"posts": posts})
 
 
-def delete_post(request, id):
+def delete_post(request, id ):
     try:
         post = Post.objects.get(id=id)
     except Post.DoesNotExist:

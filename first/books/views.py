@@ -189,21 +189,6 @@ def update_book(request, id):
             return redirect('get_book', id=book.id)
 
 
-# def add_comment(request, id):
-#     print(request.POST)
-#     try:
-#         raiting = 5
-#         book = Book.objects.get(id=id)
-#         Comment.objects.create(content=request.POST['comment'],
-#                                raiting=raiting,
-#                                user=request.user,
-#                                book=book)
-#         return redirect('get_book', id=id)
-#     except django.utils.datastructures.MultiValueDictKeyError:
-#         return HttpResponse(f"<h1>вы не добаляете комент </h1>")
-#     except Exception:
-#         return HttpResponse(f"<h1>введите коректный адресс </h1>")
-
 
 def add_comment(request, id):
     if request.user.is_authenticated:

@@ -19,8 +19,6 @@ from books.views import (
 )
 
 urlpatterns = [
-    # path("get_books/", books, name="books"),
-    # path("get_books/<int:id>/", get_book, name="get_book"),
     path("get_genre/<str:title>/", get_genre_books, name="get_genre"),
     path("get_tag/<str:title>/", get_tag_books, name="get_tag_books"),
     path("add_book/", add_book, name="add_book"),
