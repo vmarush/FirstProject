@@ -3,30 +3,53 @@ from .models import Book, Genre, Publisher, Tag, Comment,Favorite
 from django.http import HttpResponse
 from .forms import BookForm
 import django
+from django.views.generic.list import  ListView
+from django.views.generic.detail import  DetailView
+class BookListView(ListView):
+
+    model = Book
+    context_object_name = 'my_new_books'
+    queryset = Book.objects.all()
+
+class BookDetailView(DetailView):
+    model = Book
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        book = self.get_object()
+        show_favorite_button = True
+
+        if self.request.user.is_authenticated:
+            if Favorite.objects.filter(book=book, user=self.request.user):
+                show_favorite_button = False
+
+        context['show_favorite_button']=show_favorite_button
+        return context
 
 
-def books(request):
-    books = Book.objects.all()
-    genres = Genre.objects.all()
-    publishers = Publisher.objects.all()
 
-    return render(request, "templates/index.html", context={"books": books,
-                                                            "genres": genres,
-                                                            "publishers": publishers})
+# def books(request):
+#     books = Book.objects.all()
+#     genres = Genre.objects.all()
+#     publishers = Publisher.objects.all()
+#
+#     return render(request, "templates/index.html", context={"books": books,
+#                                                             "genres": genres,
+#                                                             "publishers": publishers})
 
 
-def get_book(request, id):
-    try:
-        book = Book.objects.get(id=id)
-    except Book.DoesNotExist:
-        return HttpResponse(f"<h1>книги с таким айди {id} не существует</h1>")
-
-    show_favorite_button = True
-
-    if Favorite.objects.filter(book=book,user=request.user):
-        show_favorite_button = False
-    return render(request, "templates/detali.html", context={"book": book,
-                                                             'show_favorite_button':show_favorite_button})
+# def get_book(request, id):
+#     try:
+#         book = Book.objects.get(id=id)
+#     except Book.DoesNotExist:
+#         return HttpResponse(f"<h1>книги с таким айди {id} не существует</h1>")
+#
+#     show_favorite_button = True
+#     if request.user.is_authenticated:
+#         if Favorite.objects.filter(book=book,user=request.user):
+#             show_favorite_button = False
+#     return render(request, "templates/detali.html", context={"book": book,
+#                                                              'show_favorite_button':show_favorite_button})
 
 
 def get_genre_books(request, title):
@@ -74,7 +97,8 @@ def add_book(request):
                                        publisher=publisher,
                                        genre=genre,
                                        image=image,
-                                       user=request.user)
+                                       user=request.user,
+                                       price=request.POST['price'])
             tags = request.POST.getlist('tags')
             book.tags.set(tags)
             book.save()
@@ -216,7 +240,7 @@ def buy_book(request, id):
 
 def favorite_book(request,id):
     try:
-        book = Book.objects.get(id=id)
+        book = Book.objects.get(pk=id)
     except Book.DoesNotExist:
         return HttpResponse('<h1>404</h1>')
     if not request.user.is_authenticated:
@@ -224,7 +248,7 @@ def favorite_book(request,id):
 
     Favorite.objects.create(book=book,
                             user = request.user)
-    return redirect('get_book', id=book.id)
+    return redirect('get_book', pk=book.id)
 
 def favorites(request):
     if request.user.is_authenticated:

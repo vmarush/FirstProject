@@ -4,6 +4,22 @@ from .models import Post, PostTag, Category, CategoryPost
 from django.http import HttpResponse
 
 from .forms import PostForm
+from django.views.generic.list import ListView
+
+
+class PostListView(ListView):
+    model = Post
+    context_object_name = 'my_new_posts'
+    queryset = Post.objects.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['my_name'] = 'Vadim'
+        return context
+
+    # def get_queryset(self):
+    #     return Post.objects.all()
 
 
 def posts(request):

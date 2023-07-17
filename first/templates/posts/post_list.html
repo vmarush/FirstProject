@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Посты</title>
+</head>
+<body>
+{% if request.user.is_authenticated %}
+    <h1>
+        Вы успешно вошли как {{request.user.username}}
+    </h1>
+    <a href="{% url 'logout' %}"> выход</a>
+    {% else %}
+
+<a href="{% url 'register' %}"> регистрация</a>
+<a href="{% url 'login' %}"> вход</a>
+{% endif %}
+
+
+
+<form action="{% url 'search_post' %}" method="get">
+    {% csrf_token %}
+<input placeholder="введите название поста" type="text" name="post">
+    <input type="submit" value="OK">
+</form>
+
+    <h1>Тут находятся посты</h1>
+        {% for post in my_new_posts %}
+        <br>
+
+        <a href ="{% url 'get_post' post.id %} ">{{post.title}}</a>
+        <p>Категория :{{post.category.get_sense_display}}</p>
+        <p> категория поста :{{post.category_post.title}}</p>
+
+    {% endfor %}
+
+
+
+
+    {% if request.user.is_authenticated %}
+    <h3>Можно добавить пост</h3>
+<a href="{% url 'add_post' %}"> добавить пост</a>
+    {% endif %}
+<br>
+
+    <form action="{% url 'search_category_post' %}" method="get">
+    {% csrf_token %}
+<input placeholder="введите категорию поста"  type="text" name="title">
+
+    <input type="submit" value="OK">
+</form>
+
+
+</body>
+</html>
