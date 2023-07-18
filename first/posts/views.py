@@ -5,40 +5,38 @@ from django.http import HttpResponse
 
 from .forms import PostForm
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 
 class PostListView(ListView):
     model = Post
-    context_object_name = 'my_new_posts'
+    context_object_name = 'posts1'
+    template_name = 'templates/index1.html'
     queryset = Post.objects.all()
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['my_name'] = 'Vadim'
-        return context
-
-    # def get_queryset(self):
-    #     return Post.objects.all()
 
 
-def posts(request):
-    posts = Post.objects.all()
-    posttag = PostTag.objects.all()
-    category = Category.objects.all()
+# def posts(request):
+#     posts = Post.objects.all()
+#     posttag = PostTag.objects.all()
+#     category = Category.objects.all()
+#
+#     return render(request, template_name="index1.html", context={
+#         "posts": posts,
+#         "posttag": posttag,
+#         "category": category})
 
-    return render(request, template_name="index1.html", context={
-        "posts": posts,
-        "posttag": posttag,
-        "category": category})
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'templates/detailinfopost.html'
+    context_object_name = 'post'
 
-
-def get_post(request, id):
-    try:
-        post = Post.objects.get(id=id)
-    except Post.DoesNotExist:
-        return HttpResponse(f"поста с таким  {id} нету")
-    return render(request, "templates/detailinfopost.html", context={"post": post})
+# def get_post(request, id):
+#     try:
+#         post = Post.objects.get(id=id)
+#     except Post.DoesNotExist:
+#         return HttpResponse(f"поста с таким  {id} нету")
+#     return render(request, "templates/detailinfopost.html", context={"post": post})
 
 
 def get_tag_posts(request, title):
@@ -102,7 +100,7 @@ def search_category_post(request):
     return render(request, 'search_category_post.html', context={"posts": posts})
 
 
-def delete_post(request, id ):
+def delete_post(request, id):
     try:
         post = Post.objects.get(id=id)
     except Post.DoesNotExist:
@@ -156,11 +154,11 @@ def update_post(request, id):
 
 def likes_post(request, id):
     try:
-        post = Post.objects.get(id=id)
+        post = Post.objects.get(pk=id)
 
     except Post.DoesNotExist:
         return HttpResponse(f"<h1>такого поста нету </h1>")
     if request.user.is_authenticated:
         post.likes = post.likes + 1
         post.save()
-        return redirect('get_post', id=post.id)
+        return redirect('get_post', pk=post.id)

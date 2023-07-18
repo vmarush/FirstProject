@@ -1,15 +1,25 @@
 from django.shortcuts import render, redirect
-from .models import Book, Genre, Publisher, Tag, Comment,Favorite
+from .models import Book, Genre, Publisher, Tag, Comment, Favorite
 from django.http import HttpResponse
 from .forms import BookForm
 import django
-from django.views.generic.list import  ListView
-from django.views.generic.detail import  DetailView
-class BookListView(ListView):
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
+
+class BookListView(ListView):
     model = Book
     context_object_name = 'my_new_books'
     queryset = Book.objects.all()
+
+    def get_context_data(self, **kwargs):
+        # получение первичного контента
+        context = super().get_context_data(**kwargs)
+        # запрос в бд для получения всех тегов
+        tags = Tag.objects.all()
+        context['tags'] = tags
+        return context
+
 
 class BookDetailView(DetailView):
     model = Book
@@ -23,9 +33,8 @@ class BookDetailView(DetailView):
             if Favorite.objects.filter(book=book, user=self.request.user):
                 show_favorite_button = False
 
-        context['show_favorite_button']=show_favorite_button
+        context['show_favorite_button'] = show_favorite_button
         return context
-
 
 
 # def books(request):
@@ -108,6 +117,28 @@ def add_book(request):
         return HttpResponse(f"<h1>у вас нет прав</h1>")
 
 
+def search_book_by_tags(request):
+    tags_input: str = request.GET['tags_input']
+    messeges =[]
+    tags_list = tags_input.split(', ')
+    tags = []
+    tag_books = []
+    for tag_title in tags_list:
+        try:
+            tag = Tag.objects.get(title=tag_title)
+            tags.append(tag)
+        except Tag.DoesNotExist:
+            messeges.append(f'Туга с таким названием не существует!: {tag_title} ')
+
+    for tag in tags:
+        for book in tag.books.all():
+            tag_books.append(book)
+
+    return render(request, "templates/tag_detail.html", context={"tag_books": set(tag_books),
+                                                                 "tag": None,
+                                                              'messeges':messeges})
+
+
 def search_book(request):
     title = request.GET['title']
     genre = request.GET['genre']
@@ -186,7 +217,7 @@ def update_book(request, id):
             tags = request.POST.getlist('tags')
             book.tags.set(tags)
             book.save()
-            return redirect('get_book', id=book.id)
+            return redirect('get_book', pk=book.id)
 
 
 def add_comment(request, id):
@@ -203,7 +234,7 @@ def add_comment(request, id):
                                    book=book)
         except django.utils.datastructures.MultiValueDictKeyError:
             return HttpResponse(f"<h1>404 </h1>")
-        return redirect('get_book', id=id)
+        return redirect('get_book', pk=id)
     else:
         return HttpResponse(f"<h1>введите коректный адресс </h1>")
 
@@ -222,27 +253,30 @@ def buy_book(request, id):
 
     return HttpResponse(f"<h1>buy book </h1>")
 
-def favorite_book(request,id):
+
+def favorite_book(request, id):
     try:
-        book = Book.objects.get(pk=id)
+        book = Book.objects.get(id=id)
     except Book.DoesNotExist:
         return HttpResponse('<h1>404</h1>')
     if not request.user.is_authenticated:
         return HttpResponse('<h1>404</h1>')
 
     Favorite.objects.create(book=book,
-                            user = request.user)
+                            user=request.user)
     return redirect('get_book', pk=book.id)
+
 
 def favorites(request):
     if request.user.is_authenticated:
         favorites = Favorite.objects.filter(user=request.user)
         return render(request, 'favorites.html', context={"favorites": favorites
-                                                            })
+                                                          })
     else:
         return HttpResponse('<h1>404</h1>')
 
-def delete_from_favorites(request,id):
+
+def delete_from_favorites(request, id):
     try:
         book = Book.objects.get(id=id)
     except Book.DoesNotExist:
