@@ -15,7 +15,7 @@ from books.views import (
     favorites,
     delete_from_favorites,
     BookListView,
-    BookDetailView, search_book_by_tags
+    BookDetailView, search_book_by_tags, book_detail
 )
 
 urlpatterns = [
@@ -33,5 +33,6 @@ urlpatterns = [
     path("get_books/", BookListView.as_view(), name="books"),
     path("detail_book/<int:pk>/", BookDetailView.as_view(),name='get_book'),
     path("search_book_by_tags/", search_book_by_tags,name='search_book_by_tags'),
+    path("book_detail/", book_detail, name='book_detail'),
 
 ]

@@ -1,3 +1,4 @@
+from django.db.migrations import serializer
 from django.shortcuts import render, redirect
 from .models import Book, Genre, Publisher, Tag, Comment, Favorite
 from django.http import HttpResponse
@@ -5,6 +6,23 @@ from .forms import BookForm
 import django
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.http import JsonResponse
+from .serializers import BookSerializer,GenreSerializer
+
+def book_detail(request):
+    book = Book.objects.get(id=4)
+    serializer_data = BookSerializer(book)
+    # genre = Genre.objects.get(id=1)
+    # serializer_data = GenreSerializer(genre)
+
+    return JsonResponse(data=serializer_data.data)
+    # return JsonResponse({
+    #     'title': book.title,
+    #     'autor': book.autor,
+    #     'price': book.price,
+    #     'genre': book.genre.title},
+    #     json_dumps_params={'ensure_ascii': False},
+    #     content_type='application/json; charset=utf-8')
 
 
 class BookListView(ListView):
@@ -119,7 +137,7 @@ def add_book(request):
 
 def search_book_by_tags(request):
     tags_input: str = request.GET['tags_input']
-    messeges =[]
+    messeges = []
     tags_list = tags_input.split(', ')
     tags = []
     tag_books = []
@@ -136,7 +154,7 @@ def search_book_by_tags(request):
 
     return render(request, "templates/tag_detail.html", context={"tag_books": set(tag_books),
                                                                  "tag": None,
-                                                              'messeges':messeges})
+                                                                 'messeges': messeges})
 
 
 def search_book(request):

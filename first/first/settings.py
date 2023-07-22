@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'books',
     'films',
     'posts',
-    'users'
+    'users',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
