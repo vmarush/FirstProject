@@ -9,9 +9,10 @@ class PostAdmin(admin.ModelAdmin):
     def get_tags(self, obj):
         tags = obj.tags.all()
         return "\n".join([t.title for t in tags])
-
+class CategoryPostAdmin(admin.ModelAdmin):
+    list_display = ("id", "title")
 
 admin.site.register(PostTag)
 admin.site.register(Post,PostAdmin)
 admin.site.register(Category)
-admin.site.register(CategoryPost)
+admin.site.register(CategoryPost,CategoryPostAdmin)

@@ -1,11 +1,43 @@
 from django.shortcuts import render, redirect
-
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Post, PostTag, Category, CategoryPost
 from django.http import HttpResponse
 
 from .forms import PostForm
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.db.migrations import serializer
+from django.http import JsonResponse
+
+from .serializers import PostsSerializer, CatPostSerializer
+
+
+def polychit_post(request, id):
+    try:
+        posti = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return HttpResponse(f"<h1> 404 </h1>")
+    serializer = PostsSerializer(posti)
+
+    return JsonResponse(data=serializer.data)
+
+
+def polychit_cat_post(request, id):
+    try:
+        posti = CategoryPost.objects.get(id=id)
+    except CategoryPost.DoesNotExist:
+        return HttpResponse(f"<h1> 404 </h1>")
+    serializer = CatPostSerializer(posti)
+
+    return JsonResponse(data=serializer.data)
+
+
+class PostAPIView(APIView):
+    def get(self, request):
+        post = Post.objects.all().values()
+        return Response({'post': list(post)})
+
 
 
 class PostListView(ListView):
@@ -13,7 +45,6 @@ class PostListView(ListView):
     context_object_name = 'posts1'
     template_name = 'templates/index1.html'
     queryset = Post.objects.all()
-
 
 
 # def posts(request):
@@ -30,6 +61,7 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'templates/detailinfopost.html'
     context_object_name = 'post'
+
 
 # def get_post(request, id):
 #     try:
