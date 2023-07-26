@@ -1,11 +1,7 @@
 from django.urls import path
 from posts.views import get_tag_posts, add_post, search_post, search_category_post, delete_post, update_post, \
     likes_post, \
-    PostListView, PostDetailView, polychit_post, polychit_cat_post, PostAPIView
-
-
-
-
+    PostListView, PostDetailView, polychit_post, polychit_cat_post, PostAPIView, create_post_for_json
 
 urlpatterns = [
     # path('posts/', posts, name="posts"),
@@ -23,6 +19,6 @@ urlpatterns = [
     path("polychit_post/<int:id>/", polychit_post, name="polychit_post"),
     path("polychit_cat_post/<int:id>/", polychit_cat_post, name="polychit_cat_post"),
     path("test_all/", PostAPIView.as_view()),
-
+    path("create_post_for_json/", create_post_for_json),
 
 ]

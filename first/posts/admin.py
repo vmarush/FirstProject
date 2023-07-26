@@ -12,7 +12,12 @@ class PostAdmin(admin.ModelAdmin):
 class CategoryPostAdmin(admin.ModelAdmin):
     list_display = ("id", "title")
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("id", "title",'sense')
+
+
+
 admin.site.register(PostTag)
 admin.site.register(Post,PostAdmin)
-admin.site.register(Category)
+admin.site.register(Category,CategoryAdmin)
 admin.site.register(CategoryPost,CategoryPostAdmin)

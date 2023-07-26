@@ -10,7 +10,8 @@ from django.views.generic.detail import DetailView
 from django.db.migrations import serializer
 from django.http import JsonResponse
 
-from .serializers import PostsSerializer, CatPostSerializer
+from .serializers import PostsSerializer, CatPostSerializer, CreatePostSerializer, PostsSerializer1
+from rest_framework.decorators import api_view
 
 
 def polychit_post(request, id):
@@ -33,11 +34,24 @@ def polychit_cat_post(request, id):
     return JsonResponse(data=serializer.data)
 
 
+@api_view(['POST', ])
+def create_post_for_json(request):
+    print(request.POST)
+    serializer = CreatePostSerializer(data=request.POST)
+    if serializer.is_valid():
+        print('ok')
+    else:
+        print(serializer.errors)
+        return JsonResponse(data=serializer.errors)
+    post = Post.objects.create(**serializer.validated_data)
+    serializer = PostsSerializer1(post)
+    return JsonResponse(data=serializer.data)
+
+
 class PostAPIView(APIView):
     def get(self, request):
         post = Post.objects.all().values()
         return Response({'post': list(post)})
-
 
 
 class PostListView(ListView):
