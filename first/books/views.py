@@ -7,22 +7,49 @@ import django
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http import JsonResponse
-from .serializers import BookSerializer,GenreSerializer
+from .serializers import BookSerializer, GenreSerializer, CreateBookSerializer, GenreSerializerTest,PublisherBookSerializer
+from rest_framework.decorators import api_view
 
-def book_detail(request):
-    book = Book.objects.get(id=4)
+
+def get_all_publishers(request):
+    publishers = Publisher.objects.all()
+    serializer = PublisherBookSerializer(publishers,many=True)
+    return JsonResponse(data=serializer.data, safe=False)
+
+def get_all_books(request):
+    books = Book.objects.all()
+    serializer = BookSerializer(books, many=True)
+    return JsonResponse(data=serializer.data, safe=False)
+
+def get_all_genre(request):
+    genres = Genre.objects.all()
+    serializer = GenreSerializerTest(genres,many=True)
+    return JsonResponse(data=serializer.data, safe=False)
+
+
+def book_detail(request, id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return JsonResponse(data={'id': 'Book not found'})
     serializer_data = BookSerializer(book)
-    # genre = Genre.objects.get(id=1)
-    # serializer_data = GenreSerializer(genre)
 
     return JsonResponse(data=serializer_data.data)
-    # return JsonResponse({
-    #     'title': book.title,
-    #     'autor': book.autor,
-    #     'price': book.price,
-    #     'genre': book.genre.title},
-    #     json_dumps_params={'ensure_ascii': False},
-    #     content_type='application/json; charset=utf-8')
+
+
+@api_view(['POST', ])
+def create_book(request):
+    serializer = CreateBookSerializer(data=request.POST)
+    if serializer.is_valid():
+        print('все данные валидны')
+    else:
+        print(serializer.errors)
+        return JsonResponse(data=serializer.errors)
+    book = Book.objects.create(**serializer.validated_data)
+    book.tags.set()
+
+    serializer = BookSerializer(book)
+    return JsonResponse(data=serializer.data)
 
 
 class BookListView(ListView):
