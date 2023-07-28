@@ -10,10 +10,12 @@ class BookAdmin(admin.ModelAdmin):
         tags = obj.tags.all()
         return "\n".join([t.title for t in tags])
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("id", "title")
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Genre)
-admin.site.register(Tag)
+admin.site.register(Tag,TagAdmin)
 admin.site.register(Publisher)
 admin.site.register(Comment)
 admin.site.register(Favorite)

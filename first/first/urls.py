@@ -26,6 +26,11 @@ from films.views import films
 # from users.views import register_user, login_user,logout_user
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,6 +43,8 @@ urlpatterns = [
     path('',include('posts.urls')),
 
     path('users/',include('users.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
 

@@ -9,6 +9,13 @@ from django.views.generic.detail import DetailView
 from django.http import JsonResponse
 from .serializers import BookSerializer, GenreSerializer, CreateBookSerializer, GenreSerializerTest,PublisherBookSerializer
 from rest_framework.decorators import api_view
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+
+class BookViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated,]
 
 
 def get_all_publishers(request):
@@ -40,16 +47,56 @@ def book_detail(request, id):
 @api_view(['POST', ])
 def create_book(request):
     serializer = CreateBookSerializer(data=request.POST)
+
     if serializer.is_valid():
         print('все данные валидны')
     else:
         print(serializer.errors)
         return JsonResponse(data=serializer.errors)
+    tags = serializer.validated_data.pop('tags')
     book = Book.objects.create(**serializer.validated_data)
-    book.tags.set()
+    book.tags.set(tags)
+    book.save()
 
     serializer = BookSerializer(book)
     return JsonResponse(data=serializer.data)
+
+
+
+@api_view(['PATCH', ])
+def update_book_api(request,id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return JsonResponse(data={'id':'Book not found'})
+    serializer =CreateBookSerializer(data=request.POST)
+    if serializer.is_valid():
+        print('все данные валидны')
+    else:
+        print(serializer.errors)
+        return JsonResponse(data=serializer.errors)
+    book.title = serializer.validated_data['title']
+    book.autor = serializer.validated_data['autor']
+    book.price = serializer.validated_data['price']
+    book.year = serializer.validated_data['year']
+    book.user = serializer.validated_data.get('user',book.user)
+
+    if 'tags' in serializer.validated_data.keys():
+        book.tags.set(serializer.validated_data['tags'])
+
+    book.save()
+    return JsonResponse(data={'vadim': 'vadim'})
+
+@api_view(['DELETE', ])
+def delete_book_api(request,id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return JsonResponse(data={'messege':'Такой книги не существует'})
+    book.delete()
+    return JsonResponse(data={'message': 'книга удалена'})
+
+
 
 
 class BookListView(ListView):

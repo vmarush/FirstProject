@@ -15,8 +15,13 @@ from books.views import (
     favorites,
     delete_from_favorites,
     BookListView,
-    BookDetailView, search_book_by_tags, book_detail, get_all_books, create_book, get_all_genre, get_all_publishers
+    BookDetailView, search_book_by_tags, book_detail, get_all_books, create_book, get_all_genre, get_all_publishers,
+    update_book_api, delete_book_api, BookViewSet
 )
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
+router.register('books', BookViewSet)
 
 urlpatterns = [
     path("get_genre/<str:title>/", get_genre_books, name="get_genre"),
@@ -31,14 +36,16 @@ urlpatterns = [
     path("favorites/", favorites, name="favorites"),
     path("delete_from_favorites/<int:id>/", delete_from_favorites, name="delete_from_favorites"),
     path("get_books/", BookListView.as_view(), name="books"),
-    path("detail_book/<int:pk>/", BookDetailView.as_view(),name='get_book'),
-    path("search_book_by_tags/", search_book_by_tags,name='search_book_by_tags'),
+    path("detail_book/<int:pk>/", BookDetailView.as_view(), name='get_book'),
+    path("search_book_by_tags/", search_book_by_tags, name='search_book_by_tags'),
     # path("book_detail/", book_detail, name='book_detail'),
     path("get_all_books/", get_all_books, name='get_all_books'),
     path("get_book/<int:id>/", book_detail),
-    path("create_book/",create_book),
-    path("get_all_genre/",get_all_genre),
-    path("get_all_publishers/",get_all_publishers),
-
+    path("create_book/", create_book),
+    path("get_all_genre/", get_all_genre),
+    path("get_all_publishers/", get_all_publishers),
+    path("update_book_api/<int:id>/", update_book_api),
+    path('delete_book_api/<int:id>/', delete_book_api)
 
 ]
+urlpatterns += router.urls
