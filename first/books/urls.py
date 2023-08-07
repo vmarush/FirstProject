@@ -13,6 +13,7 @@ from books.views import (
     buy_book,
     favorite_book,
     favorites,
+    get_all_comments,
     delete_from_favorites,
     BookListView,
     BookDetailView, search_book_by_tags, book_detail, get_all_books, create_book, get_all_genre, get_all_publishers,
@@ -45,7 +46,8 @@ urlpatterns = [
     path("get_all_genre/", get_all_genre),
     path("get_all_publishers/", get_all_publishers),
     path("update_book_api/<int:id>/", update_book_api),
-    path('delete_book_api/<int:id>/', delete_book_api)
+    path('delete_book_api/<int:id>/', delete_book_api),
+    path('get_all_comment', get_all_comments)
 
 ]
 urlpatterns += router.urls

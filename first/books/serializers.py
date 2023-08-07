@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from .models import Book, Genre, Publisher, Tag
+from .models import Book, Genre, Publisher, Tag, Comment
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
 
@@ -9,6 +9,7 @@ from rest_framework.exceptions import ValidationError
 class CreateBookSerializer(ModelSerializer):
     tags = serializers.CharField(required=False)
     user = serializers.CharField(required=False)
+    genre = serializers.CharField(required=False)
 
     def validate_tags(self, value: str):
         list_of_ids = value.split(', ')
@@ -25,9 +26,17 @@ class CreateBookSerializer(ModelSerializer):
         try:
             user = User.objects.get(username=value)
         except User.DoesNotExist:
-            raise ValidationError('пользователя с таким именем ненайдено')
+            raise ValidationError('пользователя с таким именем не найдено')
 
         return user
+
+    def validate_genre(self, value: str):
+        try:
+            genre = Genre.objects.get(title=value)
+        except Genre.DoesNotExist:
+            raise ValidationError('жанра с таким названием не найдено')
+
+        return genre
 
     class Meta:
         model = Book
@@ -63,6 +72,12 @@ class PublisherBookSerializer(ModelSerializer):
         fields = ['id', 'title', 'language']
 
 
+class CommentSerializer(ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['id', 'content']
+
+
 class BookSerializer(ModelSerializer):
     genre_title = serializers.SerializerMethodField()
     publisher_title = serializers.SerializerMethodField()
@@ -71,6 +86,7 @@ class BookSerializer(ModelSerializer):
     tag1 = serializers.SerializerMethodField()
 
     # genre = GenreSerializer()
+    # comments = CommentSerializer(many=True)
 
     def get_tag1(self, obj):
         list1 = []
@@ -95,4 +111,5 @@ class BookSerializer(ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['id', 'title', 'autor', 'genre_title', 'publisher_title', 'tag1']
+        fields = ['id', 'title', 'autor', 'genre_title', 'publisher_title', 'tag1', 'year',]
+                  #'comments']

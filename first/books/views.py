@@ -1,3 +1,4 @@
+import requests
 from django.db.migrations import serializer
 from django.shortcuts import render, redirect
 from .models import Book, Genre, Publisher, Tag, Comment, Favorite
@@ -7,30 +8,69 @@ import django
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http import JsonResponse
-from .serializers import BookSerializer, GenreSerializer, CreateBookSerializer, GenreSerializerTest,PublisherBookSerializer
+from .serializers import BookSerializer, GenreSerializer, CreateBookSerializer, GenreSerializerTest, \
+    PublisherBookSerializer,CommentSerializer
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework.decorators import action
+
+def get_all_comments(request):
+    coments = Comment.objects.all()
+    serializer = CommentSerializer(coments,many=True)
+    return JsonResponse(data=serializer)
 
 class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated,]
+
+    # permission_classes = [IsAuthenticated,]
+    @action(detail=True,methods=['GET'])
+    def comments(self,request,pk=None):
+        book = self.get_object()
+
+        comments = book.comments.all()
+        serializer = CommentSerializer(comments,many=True)
+        return Response(data=serializer.data)
+
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=request.POST)
+        if not serializer.is_valid():
+            return Response(data=serializer.errors)
+        tags = None
+        book = Book.objects.create(**serializer.validated_data)
+        if serializer.validated_data.get('tags'):
+            tags = serializer.validated_data.get('tags')
+        if tags:
+            book.tags.set(tags)
+            book.save()
+        BookSerializer(book)
+        return Response(data=BookSerializer(book).data)
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateBookSerializer
+        return BookSerializer
 
 
 def get_all_publishers(request):
     publishers = Publisher.objects.all()
-    serializer = PublisherBookSerializer(publishers,many=True)
+    serializer = PublisherBookSerializer(publishers, many=True)
     return JsonResponse(data=serializer.data, safe=False)
+
 
 def get_all_books(request):
     books = Book.objects.all()
     serializer = BookSerializer(books, many=True)
     return JsonResponse(data=serializer.data, safe=False)
 
+
 def get_all_genre(request):
     genres = Genre.objects.all()
-    serializer = GenreSerializerTest(genres,many=True)
+    serializer = GenreSerializerTest(genres, many=True)
     return JsonResponse(data=serializer.data, safe=False)
 
 
@@ -62,14 +102,13 @@ def create_book(request):
     return JsonResponse(data=serializer.data)
 
 
-
 @api_view(['PATCH', ])
-def update_book_api(request,id):
+def update_book_api(request, id):
     try:
         book = Book.objects.get(id=id)
     except Book.DoesNotExist:
-        return JsonResponse(data={'id':'Book not found'})
-    serializer =CreateBookSerializer(data=request.POST)
+        return JsonResponse(data={'id': 'Book not found'})
+    serializer = CreateBookSerializer(data=request.POST)
     if serializer.is_valid():
         print('все данные валидны')
     else:
@@ -79,7 +118,7 @@ def update_book_api(request,id):
     book.autor = serializer.validated_data['autor']
     book.price = serializer.validated_data['price']
     book.year = serializer.validated_data['year']
-    book.user = serializer.validated_data.get('user',book.user)
+    book.user = serializer.validated_data.get('user', book.user)
 
     if 'tags' in serializer.validated_data.keys():
         book.tags.set(serializer.validated_data['tags'])
@@ -87,16 +126,15 @@ def update_book_api(request,id):
     book.save()
     return JsonResponse(data={'vadim': 'vadim'})
 
+
 @api_view(['DELETE', ])
-def delete_book_api(request,id):
+def delete_book_api(request, id):
     try:
         book = Book.objects.get(id=id)
     except Book.DoesNotExist:
-        return JsonResponse(data={'messege':'Такой книги не существует'})
+        return JsonResponse(data={'messege': 'Такой книги не существует'})
     book.delete()
     return JsonResponse(data={'message': 'книга удалена'})
-
-
 
 
 class BookListView(ListView):
