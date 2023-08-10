@@ -17,11 +17,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from .views import *
-from books.views import books
+# from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book,update_book,add_comment
+from films.views import films
+# from posts.views import posts, get_post, get_tag_posts, add_post, search_post, search_category_post, delete_post,update_post
+# from users.views import register_user, login_user,logout_user
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 urlpatterns = [
@@ -29,6 +37,16 @@ urlpatterns = [
     path('index/', first),
     path('second/', second),
     path('third/', third),
-    path('get_books/', books)
+
+    path('films/', films),
+    path('',include('books.urls')),
+    path('',include('posts.urls')),
+
+    path('users/',include('users.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

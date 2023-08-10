@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+{% block title %}
+главная по книгам
+{% endblock %}
+
+{% block content %}
+
+
+{% if request.user.is_authenticated %}
+    <h1>
+        Вы успешно вошли как {{request.user.username}}
+    </h1>
+    <h3><a href="{% url 'logout' %}"> выход</a></h3>
+    <h3><a href ="{% url 'favorites' %} ">избранное</a></h3>
+    {% else %}
+
+<a href="{% url 'register' %}"> регистрация</a>
+<a href="{% url 'login' %}"> вход</a>
+{% endif %}
+
+<!--    {% for tag in tags %}-->
+<!--        <p>{{ tag.title }}</p>-->
+<!--    {% endfor %}-->
+<div class="container text-center" style="width:700px">
+  <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+
+
+        {% for tag in tags %}
+
+      <div class="col"style="border:1px solid black;margin:5px;">
+      <div class="p-3">
+          <a href ="{% url 'get_tag_books' tag.title %} ">{{ tag.title }}</a>
+      </div>
+    </div>
+
+
+        {% endfor %}
+  </div>
+</div>
+
+<h1>
+    Список книг
+</h1>
+
+{% for book in my_new_books %}
+<p>
+<a href ="{% url 'get_book' book.id %} ">{{book.title}}</a>
+</p>
+<p>Автор: {{book.autor}}</p>
+<p>Жанры: {{book.genre.title}}</p>
+<p>Год: {{book.year}}</p>
+<p>цена: {{book.price}}</p>
+        <br>
+<br>
+{% endfor %}
+
+
+{% if request.user.is_authenticated %}
+<a href="{% url 'add_book' %}"> добавить книгу</a>
+{% endif %}
+{% endblock %}

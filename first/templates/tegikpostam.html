@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>тег {{tagpost.title}}</title>
+</head>
+<body>
+<h1>Тег: {{tagpost.title}} </h1>
+{% if tagpost.posts.all %}
+    {%for tag in tagpost.posts.all %}
+    <p><a href ="{% url 'get_post' tag.id %} ">{{tag.title}}</a></p>
+    {% endfor %}
+{% else %}
+<p>постов с таким тегом нет</p>
+{% endif %}
+
+
+</body>
+</html>

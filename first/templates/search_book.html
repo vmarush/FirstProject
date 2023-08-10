@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+главная по книгам
+{% endblock %}
+
+{% block content %}
+
+    <h1>Поиск книг</h1>
+
+    <h3>{{ result_string }}</h3>
+
+    {% if books%}
+
+    {% for book in books %}
+        <p>
+            Название: <a href="{% url 'get_book' book.id %}">
+                {{book.title}}
+            </a>
+        </p>
+        <p>Автор: {{book.author}}</p>
+        <p>Жанр: {{book.genre.title}}</p>
+        <p>Год: {{book.year}}</p>
+        <p>Цена: {{book.price}}</p>
+
+        <br>
+
+    {% endfor %}
+
+    {% else %}
+        <h3>Книг с такими фильтрами нет!</h3>
+    {% endif%}
+{%endblock%}
