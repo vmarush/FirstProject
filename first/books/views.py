@@ -25,7 +25,6 @@ class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-    # permission_classes = [IsAuthenticated,]
     @action(detail=True,methods=['GET'])
     def comments(self,request,pk=None):
         book = self.get_object()

@@ -1,8 +1,6 @@
 from django.urls import path
 
 from books.views import (
-    # books,
-    # get_book,
     get_genre_books,
     get_tag_books,
     add_book,

@@ -9,7 +9,6 @@ class Tag(models.Model):
         return f"Тэг: {self.title}"
 
 
-# вторичная запись
 class Book(models.Model):
     title = models.CharField(max_length=50)
     autor = models.CharField(max_length=50)

@@ -50,7 +50,6 @@ class GenreBookSerializer(ModelSerializer):
 
 
 class GenreSerializer(ModelSerializer):
-    # books_titles = serializers.StringRelatedField(many=True, source='books')
     books = GenreBookSerializer(many=True)
 
     class Meta:
@@ -81,12 +80,8 @@ class CommentSerializer(ModelSerializer):
 class BookSerializer(ModelSerializer):
     genre_title = serializers.SerializerMethodField()
     publisher_title = serializers.SerializerMethodField()
-    # pub1 = serializers.StringRelatedField(many=False, source='publisher')
-    # tag1 = serializers.StringRelatedField(many=True, source='tags')
-    tag1 = serializers.SerializerMethodField()
 
-    # genre = GenreSerializer()
-    # comments = CommentSerializer(many=True)
+    tag1 = serializers.SerializerMethodField()
 
     def get_tag1(self, obj):
         list1 = []
@@ -96,9 +91,6 @@ class BookSerializer(ModelSerializer):
         return list1
 
     def get_genre_title(self, obj):
-        # if obj.genre is not None:
-        #     return obj.genre.title
-        # return 'нет жанра'
         try:
             return obj.genre.title
         except AttributeError:
@@ -111,5 +103,4 @@ class BookSerializer(ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['id', 'title', 'autor', 'genre_title', 'publisher_title', 'tag1', 'year',]
-                  #'comments']
+        fields = ['id', 'title', 'autor', 'genre_title', 'publisher_title', 'tag1', 'year']
