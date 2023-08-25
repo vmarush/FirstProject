@@ -10,7 +10,12 @@ from django.views.generic.detail import DetailView
 from django.db.migrations import serializer
 from django.http import JsonResponse
 
-from .serializers import PostsSerializer, CatPostSerializer, CreatePostSerializer, PostsSerializer1
+from .serializers import (
+    PostsSerializer,
+    CatPostSerializer,
+    CreatePostSerializer,
+    PostsSerializer1,
+)
 from rest_framework.decorators import api_view
 
 
@@ -34,12 +39,16 @@ def polychit_cat_post(request, id):
     return JsonResponse(data=serializer.data)
 
 
-@api_view(['POST', ])
+@api_view(
+    [
+        "POST",
+    ]
+)
 def create_post_for_json(request):
     print(request.POST)
     serializer = CreatePostSerializer(data=request.POST)
     if serializer.is_valid():
-        print('ok')
+        print("ok")
     else:
         print(serializer.errors)
         return JsonResponse(data=serializer.errors)
@@ -51,13 +60,13 @@ def create_post_for_json(request):
 class PostAPIView(APIView):
     def get(self, request):
         post = Post.objects.all().values()
-        return Response({'post': list(post)})
+        return Response({"post": list(post)})
 
 
 class PostListView(ListView):
     model = Post
-    context_object_name = 'posts1'
-    template_name = 'templates/index1.html'
+    context_object_name = "posts1"
+    template_name = "templates/index1.html"
     queryset = Post.objects.all()
 
 
@@ -71,10 +80,11 @@ class PostListView(ListView):
 #         "posttag": posttag,
 #         "category": category})
 
+
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'templates/detailinfopost.html'
-    context_object_name = 'post'
+    template_name = "templates/detailinfopost.html"
+    context_object_name = "post"
 
 
 # def get_post(request, id):
@@ -99,27 +109,28 @@ def add_post(request):
             form = PostForm()
             return render(request, "add_post.html", context={"form": form})
         elif request.method == "POST":
-            category_id = request.POST['category']
-            category_post_id = request.POST['category_post']
-            if category_id != '':
+            category_id = request.POST["category"]
+            category_post_id = request.POST["category_post"]
+            if category_id != "":
                 category = Category.objects.get(id=category_id)
             else:
                 category = None
-            if category_post_id != '':
+            if category_post_id != "":
                 category_post = CategoryPost.objects.get(id=category_post_id)
             else:
                 category_post = None
 
-            image = request.FILES.get('image', '123.jpg')
+            image = request.FILES.get("image", "123.jpg")
 
-            post = Post.objects.create(title=request.POST['title'],
-                                       description=request.POST['description'],
-                                       category_post=category_post,
-                                       category=category,
-                                       image=image,
-                                       user=request.user
-                                       )
-            tags = request.POST.getlist('tags')
+            post = Post.objects.create(
+                title=request.POST["title"],
+                description=request.POST["description"],
+                category_post=category_post,
+                category=category,
+                image=image,
+                user=request.user,
+            )
+            tags = request.POST.getlist("tags")
             post.tags.set(tags)
             post.save()
 
@@ -129,21 +140,21 @@ def add_post(request):
 
 
 def search_post(request):
-    post = request.GET['post']
+    post = request.GET["post"]
     posts = Post.objects.filter(title__contains=post)
 
-    return render(request, 'search_post.html', context={"posts": posts})
+    return render(request, "search_post.html", context={"posts": posts})
 
 
 def search_category_post(request):
-    title = request.GET['title']
+    title = request.GET["title"]
 
     posts = Post.objects.all()
 
-    if title != '':
+    if title != "":
         posts = posts.filter(category_post__title__contains=title)
 
-    return render(request, 'search_category_post.html', context={"posts": posts})
+    return render(request, "search_category_post.html", context={"posts": posts})
 
 
 def delete_post(request, id):
@@ -156,7 +167,7 @@ def delete_post(request, id):
     else:
         post.delete()
 
-        return redirect('posts')
+        return redirect("posts")
 
 
 def update_post(request, id):
@@ -169,29 +180,30 @@ def update_post(request, id):
     else:
         if request.method == "GET":
             form = PostForm(instance=post)
-            return render(request, "update_post.html", context={"post": post,
-                                                                'form': form})
+            return render(
+                request, "update_post.html", context={"post": post, "form": form}
+            )
         else:
-            category_id = request.POST['category']
-            category_post_id = request.POST['category_post']
-            if category_id != '':
+            category_id = request.POST["category"]
+            category_post_id = request.POST["category_post"]
+            if category_id != "":
                 category = Category.objects.get(id=category_id)
             else:
                 category = None
-            if category_post_id != '':
+            if category_post_id != "":
                 category_post = CategoryPost.objects.get(id=category_post_id)
             else:
                 category_post = None
 
-            image = request.FILES.get('image', '123.jpg')
+            image = request.FILES.get("image", "123.jpg")
 
-            post.title = request.POST['title']
-            post.description = request.POST['description']
+            post.title = request.POST["title"]
+            post.description = request.POST["description"]
             post.category_post = category_post
             post.category = category
             post.image = image
 
-            tags = request.POST.getlist('tags')
+            tags = request.POST.getlist("tags")
             post.tags.set(tags)
             post.save()
 
@@ -207,4 +219,4 @@ def likes_post(request, id):
     if request.user.is_authenticated:
         post.likes = post.likes + 1
         post.save()
-        return redirect('get_post', pk=post.id)
+        return redirect("get_post", pk=post.id)

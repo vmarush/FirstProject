@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class PostTag(models.Model):
     title = models.CharField(max_length=50)
 
@@ -10,15 +11,29 @@ class PostTag(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=50, blank=True)
-    tags = models.ManyToManyField('PostTag', related_name='posts')
-    category = models.OneToOneField("Category", on_delete=models.CASCADE, related_name="posts", default=None, null=True,
-                                    blank=True)
+    tags = models.ManyToManyField("PostTag", related_name="posts")
+    category = models.OneToOneField(
+        "Category",
+        on_delete=models.CASCADE,
+        related_name="posts",
+        default=None,
+        null=True,
+        blank=True,
+    )
     description = models.TextField(blank=True)
     date_create = models.DateTimeField(blank=True, null=True, auto_now_add=True)
-    category_post = models.ForeignKey("CategoryPost", on_delete=models.DO_NOTHING, null=True, blank=True,
-                                      related_name='posts', default=None)
-    image = models.ImageField(default='123.jpg')
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='posts')
+    category_post = models.ForeignKey(
+        "CategoryPost",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+        related_name="posts",
+        default=None,
+    )
+    image = models.ImageField(default="123.jpg")
+    user = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, null=True, blank=True, related_name="posts"
+    )
     likes = models.IntegerField(default=0)
 
     def __str__(self):
@@ -31,8 +46,7 @@ class Category(models.Model):
         ("ds", "Disasters"),
         ("ns", "News"),
         ("pb", "Public"),
-        ("h", "Humir")
-
+        ("h", "Humir"),
     )
     title = models.CharField(max_length=50)
     sense = models.CharField(max_length=2, choices=Sense, default="pb")

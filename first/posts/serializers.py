@@ -6,11 +6,17 @@ from posts.models import Post, CategoryPost
 
 
 class CreatePostSerializer(ModelSerializer):
-
-
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'category', 'category_post', 'likes', 'user']
+        fields = [
+            "id",
+            "title",
+            "description",
+            "category",
+            "category_post",
+            "likes",
+            "user",
+        ]
 
 
 class PostsSerializer(ModelSerializer):
@@ -37,7 +43,16 @@ class PostsSerializer(ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'user', 'category', 'category_post', 'tag_title', 'likes']
+        fields = [
+            "id",
+            "title",
+            "description",
+            "user",
+            "category",
+            "category_post",
+            "tag_title",
+            "likes",
+        ]
 
 
 class PostsSerializer1(ModelSerializer):
@@ -57,20 +72,29 @@ class PostsSerializer1(ModelSerializer):
         try:
             return obj.category_post.title
         except AttributeError:
-            return 'нет категории поста'
+            return "нет категории поста"
 
     def get_category(self, obj):
         try:
             return obj.category.title
         except AttributeError:
-            return 'категория отстутсвует'
+            return "категория отстутсвует"
 
     def get_user(self, obj):
         return obj.user.username
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'category', 'category_post', 'tag_title', 'likes', 'user']
+        fields = [
+            "id",
+            "title",
+            "description",
+            "category",
+            "category_post",
+            "tag_title",
+            "likes",
+            "user",
+        ]
 
 
 # class PostsSerializer(ModelSerializer):
@@ -80,6 +104,7 @@ class PostsSerializer1(ModelSerializer):
 #     class Meta:
 #         model = Post
 #         fields = ['id', 'title','description' ,'user', 'category', 'tags','likes']
+
 
 class CatPostSerializer(ModelSerializer):
     posts1 = serializers.SerializerMethodField()
@@ -95,4 +120,4 @@ class CatPostSerializer(ModelSerializer):
     class Meta:
         model = CategoryPost
 
-        fields = ['id', 'title', 'posts', 'posts1']
+        fields = ["id", "title", "posts", "posts1"]

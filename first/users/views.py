@@ -14,38 +14,43 @@ def register_user(request):
 
         return render(request, "register.html", context={"form": form})
     else:
-        email = request.POST['email']
+        email = request.POST["email"]
         if User.objects.filter(email=email).count() != 0:
             return HttpResponse("<h1>Такой email уже используется</h1>")
         else:
             try:
-                user = User.objects.create_user(username=request.POST['username'],
-                                                email=email)
+                user = User.objects.create_user(
+                    username=request.POST["username"], email=email
+                )
             except django.db.utils.IntegrityError:
-
                 return HttpResponse("<h1>Такой пользователь уже используется</h1>")
 
-            user.set_password(request.POST['password'])
+            user.set_password(request.POST["password"])
             user.save()
 
-            send_mail("Успешня регистрация", "вы успешно зарегестрирывались", settings.DEFAULT_FROM_EMAIL, settings.RECIPIENTS_EMAIL)
+            send_mail(
+                "Успешня регистрация",
+                "вы успешно зарегестрирывались",
+                settings.DEFAULT_FROM_EMAIL,
+                settings.RECIPIENTS_EMAIL,
+            )
 
             return HttpResponse("<h1>вы успешно зарегистрировались</h1>")
 
 
 def login_user(request):
-    if request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/get_books/':
-        redirect_url = 'books'
+    if request.environ["HTTP_REFERER"] == "http://127.0.0.1:8000/get_books/":
+        redirect_url = "books"
     else:
-        redirect_url = 'posts'
+        redirect_url = "posts"
 
     if request.method == "GET":
         form = LoginUserForm()
 
         return render(request, "login_user.html", context={"form": form})
     else:
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST["username"]
+        password = request.POST["password"]
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user=user)
@@ -54,13 +59,13 @@ def login_user(request):
 
         return redirect(redirect_url)
 
-def logout_user(request):
 
+def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
-        if request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/get_books/':
-            return redirect('books')
-        elif request.environ['HTTP_REFERER'] == 'http://127.0.0.1:8000/posts/':
-            return redirect('posts')
+        if request.environ["HTTP_REFERER"] == "http://127.0.0.1:8000/get_books/":
+            return redirect("books")
+        elif request.environ["HTTP_REFERER"] == "http://127.0.0.1:8000/posts/":
+            return redirect("posts")
     else:
         return HttpResponse("<h1>404</h1>")
